@@ -1,9 +1,10 @@
 # RNActivityView
 
-RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to this.
-The differential is RNActivityView which has a category (extension to UIView) to facilitate the use of the component. Decreases the work of getting instantiating and configuring component for simple uses. 
+RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to this. 
 
-MBProgressHUD is an iOS drop-in class that displays a translucent HUD with an indicator and/or labels while work is being done in a background thread. The HUD is meant as a replacement for the undocumented, private UIKit UIProgressHUD with some additional features. 
+[MBProgressHUD](https://github.com/jdg/MBProgressHUD) is an iOS drop-in class that displays a translucent HUD with an indicator and/or labels while work is being done in a background thread. The HUD is meant as a replacement for the undocumented, private UIKit UIProgressHUD with some additional features. 
+
+The differential is ##RNActivityView which has a category (extension to UIView) to facilitate the use of the component. Decreases the work of getting instantiating and configuring component for simple uses.
 
 [![](http://dl.dropbox.com/u/378729/MBProgressHUD/1-thumb.png)](http://dl.dropbox.com/u/378729/MBProgressHUD/1.png)
 [![](http://dl.dropbox.com/u/378729/MBProgressHUD/2-thumb.png)](http://dl.dropbox.com/u/378729/MBProgressHUD/2.png)
