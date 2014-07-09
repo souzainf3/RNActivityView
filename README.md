@@ -4,7 +4,7 @@ RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD)
 
 [MBProgressHUD](https://github.com/jdg/MBProgressHUD) is an iOS drop-in class that displays a translucent HUD with an indicator and/or labels while work is being done in a background thread. The HUD is meant as a replacement for the undocumented, private UIKit UIProgressHUD with some additional features. 
 
-The differential is ##RNActivityView which has a category (extension to UIView) to facilitate the use of the component. Decreases the work of getting instantiating and configuring component for simple uses.
+The differential is RNActivityView which has a category (extension to UIView) to facilitate the use of the component. Decreases the work of getting instantiating and configuring component for simple uses.
 
 [![](http://dl.dropbox.com/u/378729/MBProgressHUD/1-thumb.png)](http://dl.dropbox.com/u/378729/MBProgressHUD/1.png)
 [![](http://dl.dropbox.com/u/378729/MBProgressHUD/2-thumb.png)](http://dl.dropbox.com/u/378729/MBProgressHUD/2.png)
@@ -16,23 +16,22 @@ The differential is ##RNActivityView which has a category (extension to UIView) 
 
 ## Requirements
 
-MBProgressHUD works on any iOS version and is compatible with both ARC and non-ARC projects. It depends on the following Apple frameworks, which should already be included with most Xcode templates:
+RNActivityView requires ARC. 
 
 * Foundation.framework
 * UIKit.framework
 * CoreGraphics.framework
 
-You will need LLVM 3.0 or later in order to build MBProgressHUD. 
 
-## Adding MBProgressHUD to your project
+## Adding RNActivityView to your project
 
 ### Cocoapods
 
-[CocoaPods](http://cocoapods.org) is the recommended way to add MBProgressHUD to your project.
+[CocoaPods](http://cocoapods.org) is the recommended way to add RNActivityView to your project.
 
-1. Add a pod entry for MBProgressHUD to your Podfile `pod 'MBProgressHUD', '~> 0.8'`
+1. Add a pod entry for RNActivityView to your Podfile `pod 'RNActivityView'`
 2. Install the pod(s) by running `pod install`.
-3. Include MBProgressHUD wherever you need it with `#import "MBProgressHUD.h"`.
+3. Import RNActivityView Category `#import "UIView+RNActivityView.h"`.
 
 ### Source files
 
