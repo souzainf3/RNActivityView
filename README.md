@@ -1,6 +1,6 @@
-# RNActivityView [![Build Status](https://travis-ci.org/matej/MBProgressHUD.png)](https://travis-ci.org/matej/MBProgressHUD)
+# RNActivityView
 
-RNActivityView is based on MBProgressHUD[![](https://github.com/jdg/MBProgressHUD)]. All credits to this.
+RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to this.
 The differential is RNActivityView which has a category (extension to UIView) to facilitate the use of the component. Decreases the work of getting instantiating and configuring component for simple uses. 
 
 MBProgressHUD is an iOS drop-in class that displays a translucent HUD with an indicator and/or labels while work is being done in a background thread. The HUD is meant as a replacement for the undocumented, private UIKit UIProgressHUD with some additional features. 
