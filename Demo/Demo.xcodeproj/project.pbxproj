@@ -24,6 +24,8 @@
 		00D5B4A8196DE39500FCB207 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00D5B4A7196DE39500FCB207 /* MainWindow.xib */; };
 		00D5B4AE196DE42600FCB207 /* RNActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00D5B4AB196DE42600FCB207 /* RNActivityView.m */; };
 		00D5B4AF196DE42600FCB207 /* UIView+RNActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00D5B4AD196DE42600FCB207 /* UIView+RNActivityView.m */; };
+		00D5B4B3196DE6FE00FCB207 /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 00D5B4B1196DE6FE00FCB207 /* 37x-Checkmark.png */; };
+		00D5B4B4196DE6FE00FCB207 /* 37x-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00D5B4B2196DE6FE00FCB207 /* 37x-Checkmark@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,8 @@
 		00D5B4AB196DE42600FCB207 /* RNActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNActivityView.m; sourceTree = "<group>"; };
 		00D5B4AC196DE42600FCB207 /* UIView+RNActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RNActivityView.h"; sourceTree = "<group>"; };
 		00D5B4AD196DE42600FCB207 /* UIView+RNActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RNActivityView.m"; sourceTree = "<group>"; };
+		00D5B4B1196DE6FE00FCB207 /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
+		00D5B4B2196DE6FE00FCB207 /* 37x-Checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +139,7 @@
 		00D5B474196DE28100FCB207 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				00D5B4B0196DE6C400FCB207 /* imagens */,
 				00D5B485196DE28100FCB207 /* Images.xcassets */,
 				00D5B475196DE28100FCB207 /* Demo-Info.plist */,
 				00D5B476196DE28100FCB207 /* InfoPlist.strings */,
@@ -172,6 +177,15 @@
 			);
 			name = RNActivityView;
 			path = ../RNActivityView;
+			sourceTree = "<group>";
+		};
+		00D5B4B0196DE6C400FCB207 /* imagens */ = {
+			isa = PBXGroup;
+			children = (
+				00D5B4B1196DE6FE00FCB207 /* 37x-Checkmark.png */,
+				00D5B4B2196DE6FE00FCB207 /* 37x-Checkmark@2x.png */,
+			);
+			path = imagens;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,6 +268,8 @@
 				00D5B486196DE28100FCB207 /* Images.xcassets in Resources */,
 				00D5B4A6196DE35B00FCB207 /* HudDemoViewController.xib in Resources */,
 				00D5B478196DE28100FCB207 /* InfoPlist.strings in Resources */,
+				00D5B4B3196DE6FE00FCB207 /* 37x-Checkmark.png in Resources */,
+				00D5B4B4196DE6FE00FCB207 /* 37x-Checkmark@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
