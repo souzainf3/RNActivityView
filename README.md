@@ -27,28 +27,9 @@ RNActivityView requires ARC.
 
 ### Cocoapods
 
-[CocoaPods](http://cocoapods.org) is the recommended way to add RNActivityView to your project.
-
 1. Add a pod entry for RNActivityView to your Podfile `pod 'RNActivityView'`
 2. Install the pod(s) by running `pod install`.
 3. Import RNActivityView Category `#import "UIView+RNActivityView.h"`.
-
-### Source files
-
-Alternatively you can directly add the `MBProgressHUD.h` and `MBProgressHUD.m` source files to your project.
-
-1. Download the [latest code version](https://github.com/matej/MBProgressHUD/archive/master.zip) or add the repository as a git submodule to your git-tracked project. 
-2. Open your project in Xcode, then drag and drop `MBProgressHUD.h` and `MBProgressHUD.m` onto your project (use the "Product Navigator view"). Make sure to select Copy items when asked if you extracted the code archive outside of your project. 
-3. Include MBProgressHUD wherever you need it with `#import "MBProgressHUD.h"`.
-
-### Static library
-
-You can also add MBProgressHUD as a static library to your project or workspace. 
-
-1. Download the [latest code version](https://github.com/matej/MBProgressHUD/downloads) or add the repository as a git submodule to your git-tracked project. 
-2. Open your project in Xcode, then drag and drop `MBProgressHUD.xcodeproj` onto your project or workspace (use the "Product Navigator view"). 
-3. Select your target and go to the Build phases tab. In the Link Binary With Libraries section select the add button. On the sheet find and add `libMBProgressHUD.a`. You might also need to add `MBProgressHUD` to the Target Dependencies list. 
-4. Include MBProgressHUD wherever you need it with `#import <MBProgressHUD/MBProgressHUD.h>`.
 
 ## Usage
 
@@ -94,11 +75,3 @@ You should be aware that any HUD updates issued inside the above block won't be 
 
 For more examples, including how to use MBProgressHUD with asynchronous operations such as NSURLConnection, take a look at the bundled demo project. Extensive API documentation is provided in the header file (MBProgressHUD.h).
 
-
-## License
-
-This code is distributed under the terms and conditions of the [MIT license](LICENSE). 
-
-## Change-log
-
-A brief summary of each MBProgressHUD release can be found on the [wiki](https://github.com/matej/MBProgressHUD/wiki/Change-log). 
