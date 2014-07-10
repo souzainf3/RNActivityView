@@ -43,7 +43,7 @@ RNActivityView requires ARC.
 Simply call the associated instance. 
 
 ```objective-c
-[self.navigationController.view showActivityViewWithLabel:@"Loading"];
+[self.view showActivityViewWithLabel:@"Loading"];
 [self.view hideActivityViewWithAfterDelay:2];
 ```
 
