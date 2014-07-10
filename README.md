@@ -1,6 +1,6 @@
 # RNActivityView
 
-RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to this. 
+RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to [MBProgressHUD](https://github.com/jdg/MBProgressHUD). 
 
 [MBProgressHUD](https://github.com/jdg/MBProgressHUD) is an iOS drop-in class that displays a translucent HUD with an indicator and/or labels while work is being done in a background thread. The HUD is meant as a replacement for the undocumented, private UIKit UIProgressHUD with some additional features. 
 
@@ -31,47 +31,36 @@ RNActivityView requires ARC.
 2. Install the pod(s) by running `pod install`.
 3. Import RNActivityView Category `#import "UIView+RNActivityView.h"`.
 
-## Usage
+## Usage using category (UIView+RNActivityView.h)
 
-The main guideline you need to follow when dealing with MBProgressHUD while running long-running tasks is keeping the main thread work-free, so the UI can be updated promptly. The recommended way of using MBProgressHUD is therefore to set it up on the main thread and then spinning the task, that you want to perform, off onto a new thread. 
-
-```objective-c
-[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-	// Do something...
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[MBProgressHUD hideHUDForView:self.view animated:YES];
-	});
-});
-```
-
-If you need to configure the HUD you can do this by using the MBProgressHUD reference that showHUDAddedTo:animated: returns. 
+Simply call the associated instance. 
 
 ```objective-c
-MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-hud.mode = MBProgressHUDModeAnnularDeterminate;
-hud.labelText = @"Loading";
-[self doSomethingInBackgroundWithProgressCallback:^(float progress) {
-	hud.progress = progress;
-} completionCallback:^{
-	[hud hide:YES];
-}];
+[self.navigationController.view showActivityViewWithLabel:@"Loading"];
+[self.view hideActivityViewWithAfterDelay:2];
 ```
 
-UI updates should always be done on the main thread. Some MBProgressHUD setters are however considered "thread safe" and can be called from background threads. Those also include `setMode:`, `setCustomView:`, `setLabelText:`, `setLabelFont:`, `setDetailsLabelText:`, `setDetailsLabelFont:` and `setProgress:`.
-
-If you need to run your long-running task in the main thread, you should perform it with a slight delay, so UIKit will have enough time to update the UI (i.e., draw the HUD) before you block the main thread with your task.
+If you need to configure the RNActivityView you can call the associated instance. 
 
 ```objective-c
-[MBProgressHUD showHUDAddedTo:self.view animated:YES];
-dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC);
-dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-	// Do something...
-	[MBProgressHUD hideHUDForView:self.view animated:YES];
-});
+	self.view.activityView.mode = RNActivityViewModeDeterminate;
+	self.view.activityView.labelText = @"Progress";
+	float progress = 0.0f;
+	while (progress < 1.0f)
+	{
+		progress += 0.01f;
+		self.view.activityView.progress = progress;
+		usleep(50000);
+	}
 ```
 
-You should be aware that any HUD updates issued inside the above block won't be displayed until the block completes.
+Associated object With Blocks
 
-For more examples, including how to use MBProgressHUD with asynchronous operations such as NSURLConnection, take a look at the bundled demo project. Extensive API documentation is provided in the header file (MBProgressHUD.h).
+```objective-c
+	[self.view showActivityViewWithMode:(RNActivityViewModeIndeterminate) label:@"With a block" detailLabel:nil whileExecutingBlock:^{
+		[self myProgressTask];
+	}];
+```
+
+All other functions can be called directly from the associated instance. No need to manually set a variable for this..
 
