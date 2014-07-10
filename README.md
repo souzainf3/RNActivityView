@@ -1,6 +1,11 @@
 # RNActivityView
 
-RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to [MBProgressHUD](https://github.com/jdg/MBProgressHUD). 
+RNActivityView is based on [MBProgressHUD](https://github.com/jdg/MBProgressHUD). All credits to [MBProgressHUD](https://github.com/jdg/MBProgressHUD).
+
+
+Was designed to facilitate the calls, especially on large projects. Were refactored and created categories in the implementation of [Zee - Personal Finances](https://itunes.apple.com/us/app/id422694086).
+[![](http://www.camnote.com/wp-content/uploads/2012/12/available-on-the-app-store.png)]
+
 
 [MBProgressHUD](https://github.com/jdg/MBProgressHUD) is an iOS drop-in class that displays a translucent HUD with an indicator and/or labels while work is being done in a background thread. The HUD is meant as a replacement for the undocumented, private UIKit UIProgressHUD with some additional features. 
 
