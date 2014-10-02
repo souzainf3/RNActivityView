@@ -9,12 +9,73 @@
 #import "UIView+RNActivityView.h"
 
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 #define RNLoadingHelperKey @"RNLoadingHelperKey"
 #define RNDateLastUpadaKey @"RNDateLastUpadaKey"
 
 @implementation UIView (RNActivityView)
 
+- (void)rn_dealloc {
+    [self destroyActivityView];
+    
+    //this calls original dealloc method
+    [self rn_dealloc];
+}
+
+
+- (void)rn_didMoveToSuperview {
+    if (!self.superview || !self.window) {
+        [self destroyActivityView];
+    }
+    
+    [self rn_didMoveToSuperview];
+}
+
+- (void) destroyActivityView {
+    if (self.rn_activityView) {
+        
+        self.rn_activityView.delegate = nil;
+        @try {
+            [self.rn_activityView removeFromSuperview];
+        }
+        @catch (NSException *exception) {
+        }
+        
+        [self setActivityView:nil];
+    }
+}
+
+
+-(RNActivityView *)rn_activityView {
+    return  objc_getAssociatedObject(self, RNLoadingHelperKey);
+}
+
+- (void)swizzleMethod:(SEL)originalSelector withMethod:(SEL)swizzledSelector {
+    
+    Method originalMethod = class_getInstanceMethod([self class], originalSelector);
+    Method swizzledMethod = class_getInstanceMethod([self class], swizzledSelector);
+    
+    BOOL didAddMethod =
+    class_addMethod([self class],
+                    originalSelector,
+                    method_getImplementation(swizzledMethod),
+                    method_getTypeEncoding(swizzledMethod));
+    
+    if (didAddMethod) {
+        class_replaceMethod([self class],
+                            swizzledSelector,
+                            method_getImplementation(originalMethod),
+                            method_getTypeEncoding(originalMethod));
+    } else {
+        method_exchangeImplementations(originalMethod, swizzledMethod);
+    }
+    
+}
+
+
+
+#pragma mark - Public Methods
 
 -(RNActivityView *)activityView {
     RNActivityView *activityView = objc_getAssociatedObject(self, RNLoadingHelperKey);
@@ -23,6 +84,10 @@
         activityView = [[RNActivityView alloc] initWithView:self];
         activityView.delegate = self;
         [self setActivityView:activityView];
+        
+        [self swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(rn_dealloc)];
+        [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
+        
     }
     if (!activityView.superview) {
         [self addSubview:activityView];
@@ -64,12 +129,12 @@
     self.activityView.detailsLabelText = detail;
     self.activityView.mode = mode;
     self.activityView.dimBackground = YES;
-
+    
     [self.activityView showWhileExecuting:method onTarget:target withObject:nil animated:YES];
 }
 
 -(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail whileExecutingBlock:(dispatch_block_t)block {
-   
+    
     [self.activityView setupDefaultValues];
     self.activityView.labelText = text;
     self.activityView.detailsLabelText = detail;
