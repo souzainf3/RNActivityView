@@ -104,7 +104,7 @@
         
         [self swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(rn_dealloc)];
         [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
-        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview)];
+        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview:)];
         
         
         
