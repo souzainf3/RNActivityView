@@ -77,7 +77,7 @@ typedef void (^RNActivityViewCompletionBlock)();
 @property (assign) RNActivityViewMode mode; // default is RNActivityViewModeIndeterminate.
 @property (assign) RNActivityViewAnimation animationType;
 @property (strong) UIView *customView;
-@property (assign) id<RNActivityViewDelegate> delegate;
+@property (weak) id<RNActivityViewDelegate> delegate;
 @property (copy) NSString *labelText; // then no message is displayed.
 @property (copy) NSString *detailsLabelText;
 @property (assign) float opacity; // Defaults to 0.8 (80% opacity)

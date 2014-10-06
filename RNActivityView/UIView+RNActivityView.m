@@ -32,19 +32,36 @@
     [self rn_didMoveToSuperview];
 }
 
+- (void)rn_willMoveToSuperview:(UIView *)newSuperview {
+    
+    if (!self.window) {
+        [self rn_activityView].delegate = nil;
+        
+        [self destroyActivityView];
+    }
+    
+    [self rn_willMoveToSuperview:newSuperview];
+}
+
 - (void) destroyActivityView {
-    if (self.rn_activityView) {
-        
-        self.rn_activityView.delegate = nil;
-        @try {
-            [self.rn_activityView removeFromSuperview];
+    @synchronized(self) {
+        if (self.rn_activityView) {
+            
+            [NSObject cancelPreviousPerformRequestsWithTarget:self.rn_activityView];
+            self.rn_activityView.delegate = nil;
+            
+            @try {
+                [self.rn_activityView removeFromSuperview];
+            }
+            @catch (NSException *exception) {
+            }
+            
+            [self setActivityView:nil];
         }
-        @catch (NSException *exception) {
-        }
-        
-        [self setActivityView:nil];
     }
 }
+
+
 
 
 -(RNActivityView *)rn_activityView {
@@ -87,6 +104,9 @@
         
         [self swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(rn_dealloc)];
         [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
+        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview)];
+        
+        
         
     }
     if (!activityView.superview) {
