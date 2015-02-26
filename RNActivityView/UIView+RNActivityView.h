@@ -12,7 +12,7 @@
 
 @interface UIView (RNActivityView)<RNActivityViewDelegate>
 
-@property(nonatomic, readonly) RNActivityView * activityView;
+@property(nonatomic, readonly) RNActivityView * rn_activityView;
 
 
 -(void)showActivityView;
@@ -31,6 +31,11 @@
 - (void) showActivityViewWithLabel:(NSString *)text image:(UIImage *)image;
 - (void) showActivityViewWithLabel:(NSString *)text customView:(UIView *)view;
 
+@end
 
+
+@interface UIView (RNActivityViewDeprecated)
+
+@property(nonatomic, readonly) RNActivityView * activityView __deprecated_msg("Use `rn_activityView`");;
 
 @end

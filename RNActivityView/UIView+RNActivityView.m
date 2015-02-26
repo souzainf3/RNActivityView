@@ -16,26 +16,61 @@
 
 @implementation UIView (RNActivityView)
 
-- (void)rn_dealloc {
-    [self destroyActivityView];
+#pragma mark - Setters & Getters
+
+-(RNActivityView *)rn_activityView
+{
+    RNActivityView *activityView = objc_getAssociatedObject(self, RNLoadingHelperKey);
     
-    //this calls original dealloc method
-    [self rn_dealloc];
+    if (!activityView)
+    {
+        activityView = [[RNActivityView alloc] initWithView:self];
+        activityView.delegate = self;
+        [self setRn_activityView:activityView];
+        
+        [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
+        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview:)];
+        [self swizzleMethod:NSSelectorFromString(@"removeFromSuperview") withMethod:@selector(rn_removeFromSuperview)];
+        
+    }
+    
+    if (!activityView.superview)
+    {
+        [self addSubview:activityView];
+    }
+    return activityView;
+}
+
+-(void)setRn_activityView:(RNActivityView *)rn_activityView
+{
+    objc_setAssociatedObject(self, RNLoadingHelperKey, rn_activityView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 
-- (void)rn_didMoveToSuperview {
-    if (!self.superview || !self.window) {
+#pragma mark - Swizzled Methods
+
+- (void) rn_removeFromSuperview
+{
+    [self destroyActivityView];
+    [self rn_removeFromSuperview];
+}
+
+- (void)rn_didMoveToSuperview
+{
+    if (!self.superview || !self.window)
+    {
         [self destroyActivityView];
     }
     
     [self rn_didMoveToSuperview];
 }
 
-- (void)rn_willMoveToSuperview:(UIView *)newSuperview {
+- (void)rn_willMoveToSuperview:(UIView *)newSuperview
+{
     
-    if (!self.window) {
-        [self rn_activityView].delegate = nil;
+    if (!self.window)
+    {
+        [self rn_activityViewAssociated].delegate = nil;
         
         [self destroyActivityView];
     }
@@ -43,33 +78,34 @@
     [self rn_willMoveToSuperview:newSuperview];
 }
 
-- (void) destroyActivityView {
-    @synchronized(self) {
-        if (self.rn_activityView) {
+- (void) destroyActivityView
+{
+    @synchronized(self)
+    {
+        if (self.rn_activityViewAssociated)
+        {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self.rn_activityViewAssociated];
+            self.rn_activityViewAssociated.delegate = nil;
             
-            [NSObject cancelPreviousPerformRequestsWithTarget:self.rn_activityView];
-            self.rn_activityView.delegate = nil;
-            
-            @try {
-                [self.rn_activityView removeFromSuperview];
+            @try
+            {
+                [self.rn_activityViewAssociated removeFromSuperview];
             }
-            @catch (NSException *exception) {
-            }
+            @catch (NSException *exception) {}
             
-            [self setActivityView:nil];
+            [self setRn_activityView:nil];
         }
     }
 }
 
 
-
-
--(RNActivityView *)rn_activityView {
+-(RNActivityView *) rn_activityViewAssociated
+{
     return  objc_getAssociatedObject(self, RNLoadingHelperKey);
 }
 
-- (void)swizzleMethod:(SEL)originalSelector withMethod:(SEL)swizzledSelector {
-    
+- (void)swizzleMethod:(SEL)originalSelector withMethod:(SEL)swizzledSelector
+{
     Method originalMethod = class_getInstanceMethod([self class], originalSelector);
     Method swizzledMethod = class_getInstanceMethod([self class], swizzledSelector);
     
@@ -87,106 +123,87 @@
     } else {
         method_exchangeImplementations(originalMethod, swizzledMethod);
     }
-    
 }
 
 
 
-#pragma mark - Public Methods
-
--(RNActivityView *)activityView {
-    RNActivityView *activityView = objc_getAssociatedObject(self, RNLoadingHelperKey);
-    
-    if (!activityView) {
-        activityView = [[RNActivityView alloc] initWithView:self];
-        activityView.delegate = self;
-        [self setActivityView:activityView];
-        
-        [self swizzleMethod:NSSelectorFromString(@"dealloc") withMethod:@selector(rn_dealloc)];
-        [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
-        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview:)];
-        
-        
-        
-    }
-    if (!activityView.superview) {
-        [self addSubview:activityView];
-    }
-    return activityView;
+-(void)showActivityView
+{
+    [self.rn_activityView show:YES];
 }
 
--(void)setActivityView:(RNActivityView *)activityView {
-    objc_setAssociatedObject(self, RNLoadingHelperKey, activityView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
--(void)showActivityView {
-    [self.activityView show:YES];
-}
-
--(void)showActivityViewWithLabel:(NSString *)text {
+-(void)showActivityViewWithLabel:(NSString *)text
+{
     [self showActivityViewWithLabel:text detailLabel:nil];
 }
 
--(void)showActivityViewWithLabel:(NSString *)text detailLabel:(NSString *)detail {
-    [self showActivityViewWithMode:self.activityView.mode label:text detailLabel:detail];
+-(void)showActivityViewWithLabel:(NSString *)text detailLabel:(NSString *)detail
+{
+    [self showActivityViewWithMode:self.rn_activityView.mode label:text detailLabel:detail];
 }
 
--(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail; {
-    
-    [self.activityView setupDefaultValues];
-    self.activityView.labelText = text;
-    self.activityView.detailsLabelText = detail;
-    self.activityView.mode = mode;
-    self.activityView.dimBackground = YES;
+-(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail;
+{
+    [self.rn_activityView setupDefaultValues];
+    self.rn_activityView.labelText = text;
+    self.rn_activityView.detailsLabelText = detail;
+    self.rn_activityView.mode = mode;
+    self.rn_activityView.dimBackground = YES;
     
     [self showActivityView];
 }
 
--(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail whileExecuting:(SEL)method onTarget:(id)target {
+-(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail whileExecuting:(SEL)method onTarget:(id)target
+{
     
-    [self.activityView setupDefaultValues];
-    self.activityView.labelText = text;
-    self.activityView.detailsLabelText = detail;
-    self.activityView.mode = mode;
-    self.activityView.dimBackground = YES;
+    [self.rn_activityView setupDefaultValues];
+    self.rn_activityView.labelText = text;
+    self.rn_activityView.detailsLabelText = detail;
+    self.rn_activityView.mode = mode;
+    self.rn_activityView.dimBackground = YES;
     
-    [self.activityView showWhileExecuting:method onTarget:target withObject:nil animated:YES];
+    [self.rn_activityView showWhileExecuting:method onTarget:target withObject:nil animated:YES];
 }
 
--(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail whileExecutingBlock:(dispatch_block_t)block {
+-(void)showActivityViewWithMode:(RNActivityViewMode)mode label:(NSString *)text detailLabel:(NSString *)detail whileExecutingBlock:(dispatch_block_t)block
+{
     
-    [self.activityView setupDefaultValues];
-    self.activityView.labelText = text;
-    self.activityView.detailsLabelText = detail;
-    self.activityView.mode = mode;
-    self.activityView.dimBackground = YES;
+    [self.rn_activityView setupDefaultValues];
+    self.rn_activityView.labelText = text;
+    self.rn_activityView.detailsLabelText = detail;
+    self.rn_activityView.mode = mode;
+    self.rn_activityView.dimBackground = YES;
     
-    [self.activityView showAnimated:YES whileExecutingBlock:block];
+    [self.rn_activityView showAnimated:YES whileExecutingBlock:block];
 }
 
 
-- (void) showActivityViewWithLabel:(NSString *)text image:(UIImage *)image {
+- (void) showActivityViewWithLabel:(NSString *)text image:(UIImage *)image
+{
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     [self showActivityViewWithLabel:text customView:imageView];
 }
 
 
-- (void) showActivityViewWithLabel:(NSString *)text customView:(UIView *)view {
-    [self.activityView setupDefaultValues];
-    self.activityView.customView = view;
-	self.activityView.mode = RNActivityViewModeCustomView;
-    self.activityView.labelText = text;
+- (void) showActivityViewWithLabel:(NSString *)text customView:(UIView *)view
+{
+    [self.rn_activityView setupDefaultValues];
+    self.rn_activityView.customView = view;
+	self.rn_activityView.mode = RNActivityViewModeCustomView;
+    self.rn_activityView.labelText = text;
     
     [self showActivityView];
 }
 
 
-- (void) hideActivityView {
+- (void) hideActivityView
+{
     [self hideActivityViewWithAfterDelay:0];
 }
 
-- (void) hideActivityViewWithAfterDelay:(NSTimeInterval)delay {
-    [self.activityView hide:YES afterDelay:delay];
+- (void) hideActivityViewWithAfterDelay:(NSTimeInterval)delay
+{
+    [self.rn_activityView hide:YES afterDelay:delay];
 }
 
 
@@ -194,10 +211,29 @@
 #pragma mark -
 #pragma mark RNActivityViewDelegate methods
 
-- (void)hudWasHidden:(RNActivityView *)hud {
+- (void)hudWasHidden:(RNActivityView *)hud
+{
 	// Remove HUD from screen when the HUD was hidded
 	[hud removeFromSuperview];
-	self.activityView = nil;
+	self.rn_activityView = nil;
+}
+
+@end
+
+
+
+@implementation UIView (RNActivityViewDeprecated)
+
+#pragma mark -  Getters & Setters
+
+-(RNActivityView *)activityView
+{
+    return self.rn_activityView;
+}
+
+-(void)setActivityView:(RNActivityView *)activityView
+{
+    self.rn_activityView = activityView;
 }
 
 

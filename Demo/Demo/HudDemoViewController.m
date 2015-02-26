@@ -34,7 +34,7 @@
 
 - (IBAction)showSimple:(id)sender {
 	// Return to Default Properties Values
-	[self.navigationController.view.activityView setupDefaultValues];
+	[self.navigationController.view.rn_activityView setupDefaultValues];
 	
 	[self.navigationController.view showActivityView];
 	[self.navigationController.view hideActivityViewWithAfterDelay:2];
@@ -76,17 +76,17 @@
 
 - (IBAction)showWithLabelMixed:(id)sender {
 	
-	self.navigationController.view.activityView.labelText = @"Connecting";
-	self.navigationController.view.activityView.minSize = CGSizeMake(135.f, 135.f);
+	self.navigationController.view.rn_activityView.labelText = @"Connecting";
+	self.navigationController.view.rn_activityView.minSize = CGSizeMake(135.f, 135.f);
 	
-	[self.navigationController.view.activityView showWhileExecuting:@selector(myMixedTask) onTarget:self withObject:nil animated:YES];
+	[self.navigationController.view.rn_activityView showWhileExecuting:@selector(myMixedTask) onTarget:self withObject:nil animated:YES];
 	
 }
 
 - (IBAction)showUsingBlocks:(id)sender {
 
 	// Setup to Default Properties Values
-	[self.navigationController.view.activityView setupDefaultValues];
+	[self.navigationController.view.rn_activityView setupDefaultValues];
 	
 	[self.navigationController.view showActivityViewWithMode:(RNActivityViewModeIndeterminate) label:@"With a block" detailLabel:nil whileExecutingBlock:^{
 		[self myProgressTask];
@@ -106,7 +106,7 @@
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 	[connection start];
 	
-	[self.navigationController.view.activityView setupDefaultValues];
+	[self.navigationController.view.rn_activityView setupDefaultValues];
 	[self.navigationController.view showActivityView];
 
 }
@@ -114,11 +114,11 @@
 
 - (IBAction)showWithGradient:(id)sender {
 	// Setup default properties values
-	[self.navigationController.view.activityView setupDefaultValues];
-	self.navigationController.view.activityView.dimBackground = YES;
+	[self.navigationController.view.rn_activityView setupDefaultValues];
+	self.navigationController.view.rn_activityView.dimBackground = YES;
 	
 	// Show the HUD while the provided method executes in a new thread
-	[self.navigationController.view.activityView showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+//	[self.navigationController.view.rn_activityView showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
 }
 
 - (IBAction)showTextOnly:(id)sender {
@@ -138,8 +138,8 @@
 - (IBAction)showWithColor:(id)sender{
 	
 	// Set the hud to display with a color
-	self.navigationController.view.activityView.color = [UIColor colorWithRed:0.23 green:0.50 blue:0.82 alpha:0.90];
-	[self.navigationController.view.activityView showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+	self.navigationController.view.rn_activityView.color = [UIColor colorWithRed:0.23 green:0.50 blue:0.82 alpha:0.90];
+	[self.navigationController.view.rn_activityView showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
 }
 
 #pragma mark -
@@ -155,7 +155,7 @@
 	float progress = 0.0f;
 	while (progress < 1.0f) {
 		progress += 0.01f;
-		self.navigationController.view.activityView.progress = progress;
+		self.navigationController.view.rn_activityView.progress = progress;
 		usleep(50000);
 	}
 }
@@ -164,18 +164,18 @@
 	// Indeterminate mode
 	sleep(2);
 	// Switch to determinate mode
-	self.navigationController.view.activityView.mode = RNActivityViewModeDeterminate;
-	self.navigationController.view.activityView.labelText = @"Progress";
+	self.navigationController.view.rn_activityView.mode = RNActivityViewModeDeterminate;
+	self.navigationController.view.rn_activityView.labelText = @"Progress";
 	float progress = 0.0f;
 	while (progress < 1.0f)
 	{
 		progress += 0.01f;
-		self.navigationController.view.activityView.progress = progress;
+		self.navigationController.view.rn_activityView.progress = progress;
 		usleep(50000);
 	}
 	// Back to indeterminate mode
-	self.navigationController.view.activityView.mode = RNActivityViewModeIndeterminate;
-	self.navigationController.view.activityView.labelText = @"Cleaning up";
+	self.navigationController.view.rn_activityView.mode = RNActivityViewModeIndeterminate;
+	self.navigationController.view.rn_activityView.labelText = @"Cleaning up";
 	sleep(2);
 	// UIImageView is a UIKit class, we have to initialize it on the main thread
 	__block UIImageView *imageView;
@@ -183,9 +183,9 @@
 		UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
 		imageView = [[UIImageView alloc] initWithImage:image];
 	});
-	self.navigationController.view.activityView.customView = imageView;
-	self.navigationController.view.activityView.mode = RNActivityViewModeCustomView;
-	self.navigationController.view.activityView.labelText = @"Completed";
+	self.navigationController.view.rn_activityView.customView = imageView;
+	self.navigationController.view.rn_activityView.mode = RNActivityViewModeCustomView;
+	self.navigationController.view.rn_activityView.labelText = @"Completed";
 	sleep(2);
 }
 
@@ -195,22 +195,22 @@
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	expectedLength = MAX([response expectedContentLength], 1);
 	currentLength = 0;
-	self.navigationController.view.activityView.mode = RNActivityViewModeDeterminate;
+	self.navigationController.view.rn_activityView.mode = RNActivityViewModeDeterminate;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	currentLength += [data length];
-	self.navigationController.view.activityView.progress = currentLength / (float)expectedLength;
+	self.navigationController.view.rn_activityView.progress = currentLength / (float)expectedLength;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	self.navigationController.view.activityView.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-	self.navigationController.view.activityView.mode = RNActivityViewModeCustomView;
+	self.navigationController.view.rn_activityView.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+	self.navigationController.view.rn_activityView.mode = RNActivityViewModeCustomView;
 	[self.navigationController.view hideActivityViewWithAfterDelay:2];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	[self.navigationController.view.activityView hideActivityView];
+	[self.navigationController.view.rn_activityView hideActivityView];
 }
 
 
