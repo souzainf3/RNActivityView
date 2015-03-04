@@ -20,30 +20,46 @@
 
 -(RNActivityView *)rn_activityView
 {
-    RNActivityView *activityView = objc_getAssociatedObject(self, RNLoadingHelperKey);
-    
+    RNActivityView *activityView = [self rn_activityViewAssociated];
     if (!activityView)
     {
         activityView = [[RNActivityView alloc] initWithView:self];
         activityView.delegate = self;
+        self.rn_activityView = activityView;
+        
         [self setRn_activityView:activityView];
-        
-        [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
-        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview:)];
-        [self swizzleMethod:NSSelectorFromString(@"removeFromSuperview") withMethod:@selector(rn_removeFromSuperview)];
-        
     }
     
     if (!activityView.superview)
     {
         [self addSubview:activityView];
     }
+    
     return activityView;
 }
 
+
+
 -(void)setRn_activityView:(RNActivityView *)rn_activityView
 {
+    RNActivityView *associated_activityView = [self rn_activityViewAssociated];
+    
+    if (associated_activityView)
+    {
+        [associated_activityView removeFromSuperview];
+        associated_activityView.delegate = nil;
+        
+        objc_removeAssociatedObjects(associated_activityView);
+    }
+
     objc_setAssociatedObject(self, RNLoadingHelperKey, rn_activityView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (rn_activityView)
+    {
+        [self swizzleMethod:NSSelectorFromString(@"didMoveToSuperview") withMethod:@selector(rn_didMoveToSuperview)];
+        [self swizzleMethod:NSSelectorFromString(@"willMoveToSuperview") withMethod:@selector(rn_willMoveToSuperview:)];
+        [self swizzleMethod:NSSelectorFromString(@"removeFromSuperview") withMethod:@selector(rn_removeFromSuperview)];
+    }
 }
 
 
@@ -203,7 +219,9 @@
 
 - (void) hideActivityViewWithAfterDelay:(NSTimeInterval)delay
 {
-    [self.rn_activityView hide:YES afterDelay:delay];
+    RNActivityView *activityView = [self rn_activityViewAssociated];
+    if (activityView)
+        [activityView hide:YES afterDelay:delay];
 }
 
 
