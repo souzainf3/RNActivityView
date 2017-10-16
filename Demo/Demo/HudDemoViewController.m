@@ -155,7 +155,10 @@
 	float progress = 0.0f;
 	while (progress < 1.0f) {
 		progress += 0.01f;
-		self.navigationController.view.rn_activityView.progress = progress;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.navigationController.view.rn_activityView.progress = progress;
+        });
 		usleep(50000);
 	}
 }
@@ -164,28 +167,35 @@
 	// Indeterminate mode
 	sleep(2);
 	// Switch to determinate mode
-	self.navigationController.view.rn_activityView.mode = RNActivityViewModeDeterminate;
-	self.navigationController.view.rn_activityView.labelText = @"Progress";
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.navigationController.view.rn_activityView.mode = RNActivityViewModeDeterminate;
+        self.navigationController.view.rn_activityView.labelText = @"Progress";
+    });
 	float progress = 0.0f;
 	while (progress < 1.0f)
 	{
-		progress += 0.01f;
-		self.navigationController.view.rn_activityView.progress = progress;
+        progress += 0.01f;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.navigationController.view.rn_activityView.progress = progress;
+        });
 		usleep(50000);
 	}
 	// Back to indeterminate mode
-	self.navigationController.view.rn_activityView.mode = RNActivityViewModeIndeterminate;
-	self.navigationController.view.rn_activityView.labelText = @"Cleaning up";
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.navigationController.view.rn_activityView.mode = RNActivityViewModeIndeterminate;
+        self.navigationController.view.rn_activityView.labelText = @"Cleaning up";
+    });
 	sleep(2);
 	// UIImageView is a UIKit class, we have to initialize it on the main thread
 	__block UIImageView *imageView;
 	dispatch_sync(dispatch_get_main_queue(), ^{
 		UIImage *image = [UIImage imageNamed:@"37x-Checkmark.png"];
 		imageView = [[UIImageView alloc] initWithImage:image];
+        
+        self.navigationController.view.rn_activityView.customView = imageView;
+        self.navigationController.view.rn_activityView.mode = RNActivityViewModeCustomView;
+        self.navigationController.view.rn_activityView.labelText = @"Completed";
 	});
-	self.navigationController.view.rn_activityView.customView = imageView;
-	self.navigationController.view.rn_activityView.mode = RNActivityViewModeCustomView;
-	self.navigationController.view.rn_activityView.labelText = @"Completed";
 	sleep(2);
 }
 
