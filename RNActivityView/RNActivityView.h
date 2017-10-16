@@ -43,7 +43,7 @@ typedef enum {
 #endif
 #endif
 
-typedef void (^RNActivityViewCompletionBlock)();
+typedef void (^RNActivityViewCompletionBlock)(void);
 
 @interface RNActivityView : UIView
 
