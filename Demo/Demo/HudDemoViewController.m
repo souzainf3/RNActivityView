@@ -118,7 +118,7 @@
 	self.navigationController.view.rn_activityView.dimBackground = YES;
 	
 	// Show the HUD while the provided method executes in a new thread
-//	[self.navigationController.view.rn_activityView showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+    [self.navigationController.view.rn_activityView showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
 }
 
 - (IBAction)showTextOnly:(id)sender {
