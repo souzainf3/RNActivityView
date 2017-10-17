@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "RNActivityView"
-  s.version      = "1.0.0"
+  s.version      = "0.0.7"
   s.summary      = "Displays a translucent ActivityView with an indicator and/or labels. Can UIView category."
 
   s.description  = <<-DESC
