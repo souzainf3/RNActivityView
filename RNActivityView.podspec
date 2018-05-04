@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/souzainf3/RNActivityView.git", :tag => s.version.to_s }
 
   s.ios.deployment_target = '7.0'
-  s.tvos.deployment_target = '9.2'
+  s.tvos.deployment_target = '9.0'
 
   s.source_files  = "RNActivityView/*"
   s.frameworks = "Foundation", "UIKit", "CoreGraphics"
