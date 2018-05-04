@@ -459,6 +459,9 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		[indicator removeFromSuperview];
 		self.indicator = [[UIActivityIndicatorView alloc]
 										 initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+#if TARGET_OS_TV
+        [(UIActivityIndicatorView *)indicator setColor: [UIColor whiteColor]];
+#endif
 		[(UIActivityIndicatorView *)indicator startAnimating];
 		[self addSubview:indicator];
 	}
@@ -684,16 +687,19 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 #pragma mark - Notifications
 
 - (void)registerForNotifications {
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(deviceOrientationDidChange:) 
-			   name:UIDeviceOrientationDidChangeNotification object:nil];
+#if TARGET_OS_IOS
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(deviceOrientationDidChange:)
+               name:UIDeviceOrientationDidChangeNotification object:nil];
+#endif
 }
 
 - (void)unregisterFromNotifications {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)deviceOrientationDidChange:(NSNotification *)notification { 
+- (void)deviceOrientationDidChange:(NSNotification *)notification {
+#if TARGET_OS_IOS
 	UIView *superview = self.superview;
 	if (!superview) {
 		return;
@@ -732,6 +738,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	if (animated) {
 		[UIView commitAnimations];
 	}
+#endif
 }
 
 @end
