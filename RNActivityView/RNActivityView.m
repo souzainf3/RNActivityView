@@ -642,7 +642,11 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 
 - (void)unregisterFromKVO {
 	for (NSString *keyPath in [self observableKeypaths]) {
-		[self removeObserver:self forKeyPath:keyPath];
+		@try{
+			[self removeObserver:self forKeyPath:keyPath];
+		}@catch(id anException) {
+			//exception, no observer removal
+		}
 	}
 }
 
