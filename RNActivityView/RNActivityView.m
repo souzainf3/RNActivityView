@@ -642,7 +642,17 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 
 - (void)unregisterFromKVO {
 	for (NSString *keyPath in [self observableKeypaths]) {
-		[self removeObserver:self forKeyPath:keyPath];
+        @try {
+            // This is throwing an exception in iOS 14 beta 6
+            // Wrapping this in a try-catch block to prevent
+            // this from crashing
+            // https://github.com/souzainf3/RNActivityView/issues/8
+            [self removeObserver:self forKeyPath:keyPath];
+        } @catch (NSException *exception) {
+            // Do nothing
+        } @finally {
+            // Do nothing
+        }
 	}
 }
 
